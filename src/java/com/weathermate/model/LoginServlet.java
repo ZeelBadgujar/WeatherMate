@@ -8,7 +8,7 @@ import java.sql.*;
 public class LoginServlet extends HttpServlet {
 
     // ✅ Use your Render PostgreSQL database URL
-    private static final String JDBC_URL = "jdbc:postgresql://dpg-d405n67diees73ajmcb0-a.singapore-postgres.render.com/weathermate";
+    private static final String JDBC_URL = "jdbc:postgresql://dpg-d405n67diees73ajmcb0-a.singapore-postgres.render.com/weathermate?sslmode=require";
     private static final String JDBC_USER = "weathermate_user";
     private static final String JDBC_PASS = "izD40YsOV495aSYPHin5jMrndAkynrrU";
 

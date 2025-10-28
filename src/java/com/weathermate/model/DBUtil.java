@@ -3,7 +3,7 @@ package com.weathermate.model;
 import java.sql.*;
 
 public class DBUtil {
-    private static final String URL = "jdbc:postgresql://dpg-d405n67diees73ajmcb0-a.singapore-postgres.render.com:5432/weathermate";
+    private static final String URL = "jdbc:postgresql://dpg-d405n67diees73ajmcb0-a.singapore-postgres.render.com/weathermate?sslmode=require";
     private static final String USER = "weathermate_user";
     private static final String PASSWORD = "izD40YsOV495aSYPHin5jMrndAkynrrU";
 
