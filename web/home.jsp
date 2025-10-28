@@ -33,7 +33,7 @@
     // ✅ Detect if it's first load (default city)
     String requestedCity = request.getParameter("city");
     boolean isFirstLoad = (requestedCity == null || requestedCity.trim().isEmpty())
-                          && city != null && city.equals("Vadodara");
+                          && city != null && city.equals("Kolkata");
 %>
 <!DOCTYPE html>
 <html>
