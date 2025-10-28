@@ -24,4 +24,5 @@ It fetches real-time weather data using the OpenWeather API and allows users to:
 ### 1️⃣ Clone the repository
 ```bash
 git clone https://github.com/ZeelBadgujar/weathermate.git
+```bash
 cd weathermate
