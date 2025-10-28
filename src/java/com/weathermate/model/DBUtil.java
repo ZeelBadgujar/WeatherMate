@@ -3,16 +3,16 @@ package com.weathermate.model;
 import java.sql.*;
 
 public class DBUtil {
-    private static final String URL = "jdbc:mysql://localhost:3306/weather?useSSL=false&serverTimezone=UTC";
-    private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String URL = "jdbc:postgresql://dpg-d405n67diees73ajmcb0-a.singapore-postgres.render.com:5432/weathermate";
+    private static final String USER = "weathermate_user";
+    private static final String PASSWORD = "izD40YsOV495aSYPHin5jMrndAkynrrU";
 
     static {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            System.out.println("✅ MySQL Driver loaded successfully");
+            Class.forName("org.postgresql.Driver");
+            System.out.println("✅ PostgreSQL Driver loaded successfully");
         } catch (ClassNotFoundException e) {
-            System.err.println("❌ MySQL Driver not found!");
+            System.err.println("❌ PostgreSQL Driver not found!");
             e.printStackTrace();
         }
     }
@@ -20,7 +20,7 @@ public class DBUtil {
     public static Connection getConnection() throws SQLException {
         try {
             Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("✅ Database connection established");
+            System.out.println("✅ PostgreSQL connection established");
             return conn;
         } catch (SQLException e) {
             System.err.println("❌ Database connection failed: " + e.getMessage());

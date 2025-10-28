@@ -4,9 +4,11 @@ import java.util.*;
 
 public class LocationHistoryDAO {
 
+    // Fetch latest 20 location history entries for a user
     public List<LocationHistory> getLocationHistory(int userId) {
         List<LocationHistory> list = new ArrayList<>();
-        String sql = "SELECT id, user_id, city_name, country, latitude, longitude, search_date FROM location_history WHERE user_id=? ORDER BY id DESC LIMIT 20";
+        String sql = "SELECT id, user_id, city_name, country, latitude, longitude, search_date " +
+                     "FROM location_history WHERE user_id = ? ORDER BY id DESC LIMIT 20";
 
         try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, userId);
@@ -29,8 +31,10 @@ public class LocationHistoryDAO {
         return list;
     }
 
+    // Add a new location search to history
     public void addLocationHistory(LocationHistory loc) throws SQLException {
-        String sql = "INSERT INTO location_history (user_id, city_name, country, latitude, longitude) VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO location_history (user_id, city_name, country, latitude, longitude, search_date) " +
+                     "VALUES (?, ?, ?, ?, ?, NOW())";
         try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, loc.getUserId());
             ps.setString(2, loc.getCityName());

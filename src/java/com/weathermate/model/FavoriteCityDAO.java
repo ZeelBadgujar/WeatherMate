@@ -7,7 +7,8 @@ public class FavoriteCityDAO {
     // Fetch all favorite cities for a user
     public List<FavoriteCity> getFavoriteCities(int userId) {
         List<FavoriteCity> list = new ArrayList<>();
-        String sql = "SELECT id, user_id, city_name, country, latitude, longitude, added_date FROM favorite_cities WHERE user_id=? ORDER BY id DESC";
+        String sql = "SELECT id, user_id, city_name, country, latitude, longitude, added_date " +
+                     "FROM favorite_cities WHERE user_id = ? ORDER BY id DESC";
 
         try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, userId);
@@ -29,9 +30,9 @@ public class FavoriteCityDAO {
         return list;
     }
 
-    // ✅ MISSING METHOD 1: Check if a city already exists in user's favorite list
+    // Check if a city already exists in user's favorite list
     public boolean isCityInFavorites(int userId, String cityName) {
-        String sql = "SELECT COUNT(*) FROM favorite_cities WHERE user_id=? AND city_name=?";
+        String sql = "SELECT COUNT(*) FROM favorite_cities WHERE user_id = ? AND city_name = ?";
         try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ps.setString(2, cityName);
@@ -47,7 +48,8 @@ public class FavoriteCityDAO {
 
     // Add a new favorite city
     public void addFavoriteCity(FavoriteCity city) throws SQLException {
-        String sql = "INSERT INTO favorite_cities (user_id, city_name, country, latitude, longitude) VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO favorite_cities (user_id, city_name, country, latitude, longitude, added_date) " +
+                     "VALUES (?, ?, ?, ?, ?, NOW())";
         try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, city.getUserId());
             ps.setString(2, city.getCityName());
@@ -58,9 +60,9 @@ public class FavoriteCityDAO {
         }
     }
 
-    // ✅ MISSING METHOD 2: Remove a city from favorites by cityId and userId
+    // Remove a city from favorites by cityId and userId
     public boolean removeFavoriteCity(int cityId, int userId) {
-        String sql = "DELETE FROM favorite_cities WHERE id=? AND user_id=?";
+        String sql = "DELETE FROM favorite_cities WHERE id = ? AND user_id = ?";
         try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, cityId);
             ps.setInt(2, userId);

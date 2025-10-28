@@ -1,4 +1,5 @@
 package com.weathermate.model;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -15,41 +16,39 @@ public class WeatherServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, java.io.IOException {
 
-        // ✅ FIXED: Better session validation with debugging
         HttpSession session = request.getSession(false);
-        
+
         System.out.println("=== WeatherServlet Debug ===");
         System.out.println("Session exists: " + (session != null));
-        
+
         if (session == null) {
             System.out.println("❌ No session found - redirecting to login");
             response.sendRedirect("index.jsp");
             return;
         }
-        
+
         User user = (User) session.getAttribute("user");
         System.out.println("User in session: " + (user != null ? user.getUsername() : "NULL"));
         System.out.println("Session ID: " + session.getId());
-        
+
         if (user == null) {
             System.out.println("❌ No user attribute in session - redirecting to login");
             response.sendRedirect("index.jsp");
             return;
         }
-        
+
         System.out.println("✅ Session valid for user: " + user.getUsername());
 
         String cityInput = request.getParameter("city");
         String lat = request.getParameter("latitude");
         String lon = request.getParameter("longitude");
 
-        final String apiKey = "838ed5e79999dec35d6a3ef5b7b836e4"; // OpenWeatherMap API key
+        final String apiKey = "838ed5e79999dec35d6a3ef5b7b836e4";
 
         String currentUrl;
         String forecastUrl;
         String displayName = "";
 
-        // ✅ Use coordinates if available, otherwise city name
         if (lat != null && lon != null && !lat.isEmpty() && !lon.isEmpty()) {
             currentUrl = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon
                     + "&appid=" + apiKey + "&units=metric";
@@ -67,7 +66,7 @@ public class WeatherServlet extends HttpServlet {
         }
 
         try {
-            // ---- Fetch Forecast Data ----
+            // 🌤 Fetch Forecast Data
             URL forecastAPI = new URL(forecastUrl);
             HttpURLConnection forecastConn = (HttpURLConnection) forecastAPI.openConnection();
             forecastConn.setRequestMethod("GET");
@@ -95,7 +94,7 @@ public class WeatherServlet extends HttpServlet {
                 icons[i] = day.getJSONArray("weather").getJSONObject(0).getString("icon");
             }
 
-            // ---- Fetch Current Weather Data ----
+            // 🌡 Fetch Current Weather Data
             URL currentAPI = new URL(currentUrl);
             HttpURLConnection currentConn = (HttpURLConnection) currentAPI.openConnection();
             currentConn.setRequestMethod("GET");
@@ -119,17 +118,16 @@ public class WeatherServlet extends HttpServlet {
             String country = currentJson.has("sys") ? currentJson.getJSONObject("sys").optString("country", "") : "";
             String state = "";
 
-            // ✅ FIXED: Get actual coordinates from API response for accurate storage
             double actualLat = 0.0;
             double actualLon = 0.0;
-            
+
             if (currentJson.has("coord")) {
                 JSONObject coordObj = currentJson.getJSONObject("coord");
                 actualLat = coordObj.optDouble("lat", 0.0);
                 actualLon = coordObj.optDouble("lon", 0.0);
             }
 
-            // ---- Geocoding API for better display ----
+            // 🌍 Geocoding for Display
             try {
                 String geoUrl = "https://api.openweathermap.org/geo/1.0/direct?q=" + URLEncoder.encode(cityInput, "UTF-8")
                         + "&limit=1&appid=" + apiKey;
@@ -169,7 +167,6 @@ public class WeatherServlet extends HttpServlet {
                 displayName = cityName + (country.isEmpty() ? "" : ", " + country);
             }
 
-            // ---- Other Weather Data ----
             String humidity = mainObj.get("humidity").toString();
             String pressure = mainObj.get("pressure").toString();
             String windSpeed = currentJson.getJSONObject("wind").get("speed").toString();
@@ -182,7 +179,7 @@ public class WeatherServlet extends HttpServlet {
             String sunset = new java.text.SimpleDateFormat("hh:mm a")
                     .format(new java.util.Date(sunsetUnix * 1000L));
 
-            // ---- Set attributes for JSP ----
+            // 🧩 JSP Attributes
             request.setAttribute("city", displayName);
             request.setAttribute("temp", temp);
             request.setAttribute("desc", desc);
@@ -196,13 +193,13 @@ public class WeatherServlet extends HttpServlet {
             request.setAttribute("sunrise", sunrise);
             request.setAttribute("sunset", sunset);
 
-            // ✅ FIXED: Dashboard Integration with proper null checks
+            // 🧠 Save Location to PostgreSQL
             try {
                 LocationHistory location = new LocationHistory();
                 location.setUserId(user.getId());
                 location.setCityName(cityName);
                 location.setCountry(country);
-                location.setLatitude(actualLat);  // Use actual coordinates from API
+                location.setLatitude(actualLat);
                 location.setLongitude(actualLon);
 
                 LocationHistoryDAO locationDAO = new LocationHistoryDAO();
@@ -213,13 +210,12 @@ public class WeatherServlet extends HttpServlet {
                 daoEx.printStackTrace();
             }
 
-            // ✅ FIXED: Favorite button attributes with actual coordinates
             request.setAttribute("canAddFavorite", true);
             request.setAttribute("currentCityName", cityName);
             request.setAttribute("currentCountry", country);
             request.setAttribute("currentLat", String.valueOf(actualLat));
             request.setAttribute("currentLon", String.valueOf(actualLon));
-            
+
             System.out.println("✅ Weather data loaded successfully for: " + displayName);
 
         } catch (Exception e) {

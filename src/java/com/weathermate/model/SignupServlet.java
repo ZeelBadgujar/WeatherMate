@@ -1,13 +1,16 @@
 package com.weathermate.model;
+
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
 
 public class SignupServlet extends HttpServlet {
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/weather";
-    private static final String JDBC_USER = "root";
-    private static final String JDBC_PASS = "";
+
+    // ✅ Your Render PostgreSQL database credentials
+    private static final String JDBC_URL = "jdbc:postgresql://dpg-d405n67diees73ajmcb0-a.singapore-postgres.render.com/weathermate";
+    private static final String JDBC_USER = "weathermate_user";
+    private static final String JDBC_PASS = "izD40YsOV495aSYPHin5jMrndAkynrrU";
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
@@ -27,10 +30,11 @@ public class SignupServlet extends HttpServlet {
         ResultSet rs = null;
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            // ✅ Load PostgreSQL JDBC driver
+            Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASS);
 
-            // Check if username already exists
+            // ✅ Check if username already exists
             String checkQuery = "SELECT id FROM users WHERE username = ?";
             checkStmt = conn.prepareStatement(checkQuery);
             checkStmt.setString(1, username);
@@ -43,7 +47,7 @@ public class SignupServlet extends HttpServlet {
                 return;
             }
 
-            // Insert new user
+            // ✅ Insert new user record
             String insertQuery = "INSERT INTO users(username, password) VALUES(?, ?)";
             insertStmt = conn.prepareStatement(insertQuery);
             insertStmt.setString(1, username);
