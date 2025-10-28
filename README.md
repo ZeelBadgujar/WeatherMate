@@ -27,3 +27,19 @@ git clone https://github.com/ZeelBadgujar/weathermate.git
 ```
 ```bash
 cd weathermate
+```
+---
+
+📜 License
+
+This project is open-source and free to use under the MIT License.
+You can modify and distribute it as per the terms of the license.
+
+---
+
+💬 Contribute
+
+Want to improve WeatherMate?
+Fork this repo, make your changes, and submit a Pull Request!
+
+---
