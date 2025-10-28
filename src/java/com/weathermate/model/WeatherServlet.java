@@ -56,7 +56,7 @@ public class WeatherServlet extends HttpServlet {
                     + "&appid=" + apiKey + "&units=metric";
         } else {
             if (cityInput == null || cityInput.trim().isEmpty()) {
-                cityInput = "Vadodara";
+                cityInput = "Kolkata";
             }
             String encodedCity = URLEncoder.encode(cityInput.trim(), "UTF-8");
             currentUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + encodedCity
