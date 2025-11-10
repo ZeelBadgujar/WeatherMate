@@ -20,7 +20,7 @@ It fetches real-time weather data using the OpenWeather API and allows users to:
 ---
 ### 🌦️ Check Weather Now
 ```bash
-[git clone https://github.com/ZeelBadgujar/weathermate.git](https://weathermate-udpt.onrender.com)
+https://weathermate-udpt.onrender.com
 ```
 ---
 
